@@ -36,28 +36,39 @@
 							<!-- Content -->
 								<section>
 									<header class="main">
-										<h1 class="generic">Network Analysis of the Primary Healthcare Facility Referral System in the Philippines</h1>
-										<h5 class="generic">By: Elijah Justin Medina & Jomilynn Rebanal</h5>
+										<h1 class="generic">Upgrading Amenities: An Application of Recommender Systems in Airbnb Listings</h1>
+										<h5 class="generic">By: Justine Bu&ntilde;o, Elijah Justin Medina, and Raphael Mari Ongleo</h5>
 									</header>
 
 
-									<span class="image main"><img src="ns-project-images/network-cropped.png" alt="" /></span>
+									<span class="image main"><img src="bdcc-project-images/metho-bnb.png" alt="" /></span>
 
 			
-									<h2>Motivation</h2>
-
-									<p>With the Universal Health Care Law, the healthcare system of the Philippines is expected to experience an upsurge in demand, possibly even to the point of overloading of the system. To create any preventive measures or policies, it is imperative to understand the capabilities of our healthcare system, first. In this study, we analyzed the referral system between different healthcare facilities in the Philippines. </p>
-									<hr class="major">
 									<h2>Summary</h2>
 
 									<p>
-										<b>Introduction:</b> An effective health facility referral system enables timely and comprehensive access to healthcare services for the citizens. In this study, we performed a network analysis on the primary health facility referral system from barangay health stations (BHS) to rural health units (RHU) to hospitals. <br> 
-										<b>Data:</b>The dataset was comprised of 22,644 BHS, 2,592 RHUs, and 2,138 hospitals.<br>
-										<b>Methodology:</b> We measured the distance between referring and referral facilities and imputed missing values with the average distance in the city/municipality or province. A tripartite network was created wherein edges were based on the existence of referral mechanism between facilities and weighted by distance. We compared regional hub importance and average shortest path lengths and we simulated the influx of referrals from RHUs to hospitals. <br>
-										<b>Results and Discussion:</b> In general, regions in Mindanao have the highest average shortest path lengths. Critical hospital hubs were identified in Regions III, IV-A, and VIII but the first two regions demonstrate relatively low average shortest path lengths. On the other hand, the simulations show high critical population for NCR while the other regions show similar thresholds.<br>
-										<b>Conclusions:</b> Regional variations exist in the primary healthcare facility referral mechanisms in the Philippines. <br>
-										<b>Recommendations:</b> The Department of Health can use the results of this study in conjunction with the demand for healthcare to identify priority areas for its Health Facility Enhancement Program.
+										Airbnb is an online marketplace for users to find lodging or rentals for short-term vacations to even long-term stays. It has a total of 150 million users worldwide with around 2 million people staying on an Airbnb per night. Catering to this demand, there are over 6 million Airbnb listings for users to choose from. More and more hotel owners to small-time apartment owners are shifting to this medium in looking for their next customer. With that, listings are getting more and more competitive to become more attractive to Airbnb users.
 									</p>
+									<p>
+										This study aims to find which amenities should owners/hosts need to add to their Airbnb properties to become more competitive in their different segments. Using the Inside Airbnb dataset available in jojie filtered to listings only, we looked into clustering the listings based on the different features such as number of bedrooms, property type, etc. and recommend what amenities are most needed to increase the value of the property per cluster. The data consists of listings from 2015 to 2019 amounting to about 16 million rows with 106 features, comprising a total of 85GB.
+									</p>
+									<p style="margin-bottom: 10px;">
+										K-Means algorithm was used in performing the clustering of listings. Eight (8) clusters were identified based on the validation criterias and clustering are based on the type and size of the listings. The clusters obtained are the following indicating their characteristics:
+									</p>
+									<ul style="padding-left: 50px; padding-top: -10	px;">
+										<li>Cluster 0: Lower-middle end</li>
+										<li>Cluster 1: Middle end (entire home)</li>
+										<li>Cluster 2: Upper-middle end</li>
+										<li>Cluster 3: Low end</li>
+										<li>Cluster 4: Middle end (Private rooms)</li>
+										<li>Cluster 5: Ultra high end</li>
+										<li>Cluster 6: Ultra low end</li>
+										<li>Cluster 7: High end</li>
+									</ul>
+
+									<p>After obtaining the clusters, user-based collaborative filtering was then used to make recommendations of amenities per cluster. However, what makes this system different is that it recommends amenities to the low-rated listings using the similar listings but with high rating. This is to find what the low-rated listings are missing that the high-rated listings have. Doing this would also help the owners address customer convenience, increase its listing's popularity, and further understand what the customers really needs.</p>	
+									<p>Results of the recommender system showed that what the low-rated listings are lacking are not necessarily the most commonly needed amenities but the very much desired ones. Some of which includes `Wifi`, `hair dryer`, and `iron`, and the `essentials` which are known to be always being used when going on a vacation or a trip. This possibly is the reason why they are being low-rated.</p>
+									<p>For future studies, we recommend to extend this study to be a general recommender system which can cater listings from different countries or city, especially those which are not commonly visited by tourists. This is to help them improve their listings by adding necessary amenities mostly wanted by the customers. A monetary value of every amenity being added could also be explored by predicting the price or rating of the listing after implementing the recommended amenity.</p>
 
 									<ul class="actions">
 										<li><a href="https://github.com/ejmmedina/NS-project/blob/master/hcpn-network-NS.md" class="button">View code in GitHub</a></li>
@@ -175,7 +186,7 @@
 
 							<!-- Footer -->
 								<footer id="footer">
-									<p class="copyright">&copy; All rights reserved. Template: <a href="https://html5up.net">HTML5 UP</a>.</p>
+									<p class="copyright">Template: <a href="https://html5up.net">HTML5 UP</a>.</p>
 								</footer>
 
 						</div>
