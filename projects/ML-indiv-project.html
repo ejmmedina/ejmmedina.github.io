@@ -36,86 +36,29 @@
 							<!-- Content -->
 								<section>
 									<header class="main">
-										<h1 class="generic">The Rice is Right: Early Detection of Rice Leaf Disease using Convolutional Neural Networks</h1>
-										<h5 class="generic">By: Justine Bu&ntilde;o, Elijah Justin Medina, and Raphael Mari Ongleo</h5>
+										<h1 class="generic">What's that Pokemon?: Feature Extraction for Image Classification</h1>
+										<h5 class="generic">By: Elijah Justin Medina</h5>
 									</header>
 
-
-									<span class="image main"><img src="../images/ml2-group-header.PNG" alt="" /></span>
-
-			
-									<h2>Highlights</h2>
-
-									<p>
-										In the Philippines, rice farming industry is very dominant encompassing over 10 million Filipinos. However, these families earn as low as 10 pesos due to the current economy in the industry. Add this to the fact that 37% of their production are lost due to pests and diseases.
-									</p>
-									<p>
-										This study aims to help farmers by early detection of disease through rice leaf image processing using convolutional neural networks. The model is trained on the Rice Disease Image Dataset by Huy Minh Do which includes over 3000 rice leaf images. Over 4 categories: Leaf Blast, Brown Spot, Hispa, and Healthy; the model performs well at 78.2% accuracy. We also looked at how it performs on classifying a healthy rice leaf and found that the model performed even better at 92.2%. Furthermore, we saw that the model is capable even for cases where the symptoms of the disease are still very small. This model gives farmers ample time to potentially save their crops, have better yield, and save cost from fertilizers and pesticides.
-									</p>
 									
-									<h2>Data</h2>
+									<img src="../images/ml-display.png" width="80%" class="center" alt="" />
 
-									<p>The data used for this project is <a href="https://www.kaggle.com/minhhuy2810/rice-diseases-image-dataset/version/1?fbclid=IwAR3QwbQzFpHLe_KCelIbrrMB4kwaBfhzJhrcqLwX7DEOJmLfkI4ZRF2le4U">Rice Diseases Image Dataset</a> compiled by Huy Minh Do and uploaded in Kaggle. This consists of 3355 images of isolated rice leaves with four classifications: Healthy (1488) or afflicted with one of the diseases: Hispa (565), Brown Spot (523), or Leaf Blast (779). The image sizes range from 734 by 734 pixels to 3120 by 3120 pixels. Sample images of the dataset for each classification is shown below. </p>
-
-									<img src='../images/ml2-sampleimages.png' class="center" width="100%">
-
-									<h2>Data Pre-processing</h2>
-									<p>Before any modeling or classification is performed on the images, several image pre-processing steps must be performed first.</p>
-
-									<h3>Reshape</h3>
-									<p>To account for any limitations that may arise due to camera specifications, all images are reshaped to 300 by 300 pixels, regardless of initial shape. In doing so, the model that will be trained in the succeeding parts will be applicable to even low-quality images.</p>
-
-									<h3>Background removal</h3>
-									<p>After reshaping, the foreground of the image, i.e. the actual leaf, must be separated from the background to reduce noise and data leakage, which would then lead to easier model training. With this, we need to do automated background removal such that an actual photo not taken in an isolated environment can be classified properly by our model.</p>
+									<h2>Summary</h2>
+									<p>Pokémon is a video game franchise that has existed for more than two decades now. Today, there are more than 800 Pokemon and 18 different Pokémon types, spanning 7 generations. With each new generation, dozens of Pokemons are introduced, with varying types, making it a problem for those without Pokemon knowledge to follow the franchise. As such, a machine learning approach is taken to identify a Pokemon's type, given its image.</p>
+									<p>The data consists of 120 by 120 px images of the 809 Pokemon currently introduced. Each image is processed in order to extract features containing its color and size information. In doing so, we minimize the features from 43200 features to 21. Aside from the images, there is also data on the names and their respective types, which we use as targets.</p>
+									<p>The analysis is done twice: one for the original data, and another undersampled to balance the data. Logistic Regression with L1 regularization is used for the original data while Linear SVM with L1 regularization is used for the balanced data due to having the highest accuracy. From the resulting models, the predictability of different Pokemon types and generations are observed.</p>
+									<p>From this analysis, we observe that different combination of features lead to different accuracies, and more features does not necessarily lead to higher accuracy since some features introduce noise.</p>
+									<p>The overall accuracy of the models are not worth mentioning as they range from 10% to 40% but breaking these down to the respective classes will yield accuracies ranging from 0% to 80%. This indicates that the features designed are predictive of some classes but not all.</p>
+									<p>The analysis done in this project is only applied to Pokemon data but it can be applied to other datasets. The ideas and learnings obtained from this project can be useful for analysis and other machine learning problems to be encountered in the future.</p>
 
 
-									<p style="margin-bottom: 10px;">
-										These are the steps taken to remove the background per image:
-									</p>
-									<ol style="padding-left: 50px; padding-top: -10	px;">
-										<li>We first perform thresholding according to the RGB values. We want the green pixels and the area around it so we filter by taking out the pixels that have too high red and blue values. We start with 220 threshold (out of 255) and continuously reduce this threshold if the resulting mask image is too big (i.e. not much of the image has been filtered).</li>
-										<li>From the resulting mask, we perform morphological techniques like opening so that the pixels in-between the green leaf pixels will be included into the mask (i.e. the brown spots which will most likely be filtered out will be included using the morphological technique). For this, we use a circular structuring element of radius 13px.</li>
-										<li>We perform erosion to increase the area of the mask in order for the filter to include the immediate surrounding pixels. Then a final closing operation was done to remove the isolated dots.</li>
-										<li>From the blobs formed, we select the largest one and use that as the mask for our actual image.</li>
-									</ol>
-									
-									<h3>Data Augmentation</h3>
-									<p>To account for different environments upon taking the picture, e.g. rotated images, shifted objects, zoomed in pictures, image augmentation is performed. The augmented images will be transformed versions of the dataset by randomly rotating the image up to 30 ∘ , shifting the image vertically or horizontally up to 15% of the image length, shearing the image up to 20 ∘ , and zooming in the image 0.8x to 1.2x.</p>
-
-									<h2>Modeling</h2>
-
-									<p style="margin-bottom: 10px;">
-										For the modeling, we used different pre-trained models and one manually made model to classify the images. Six architectures were used for this project:
-									</p>
-									<ul style="padding-left: 50px; padding-top: -10	px;">
-										<li>VGG16 base for feature extraction and 3-dense layers for classification</li>
-										<li>VGG16 base with only the first 3 blocks frozen and 3-dense layers</li>
-										<li>VGG19 base and 3-dense layers</li>
-										<li>XCeption base and 3-dense layers</li>
-										<li>ResNet base and 3-dense layers</li>
-										<li>5 convolutional layers and 2-dense layers</li>
-									</ul>
-
-									<h2>Results</h2>
-
-									<p>Training all the models discussed with the processed images, the accuracy of each model on a validation set is shown in Table 1. Comparing the different models, the model trained from top to bottom yielded the highest accuracy at 78.2%.</p>
-
-									<img src="../images/ml2-group-results.PNG" width="35%" class="center" alt="" />
-
-									<p>Looking further into the best model and how well it predicts each class, an 85.3% accuracy was found for brown spot, 54.4% for hispa, and 62.0% for leaf blast. On the other hand for healthy rice leaves, it was classified accurately 92.2% of the time. From this, discrepancies on prediction power of the model to different classifications can be observed. Except for brown spots, the model only accurately predicts more than half of rice leaves with disease.</p>
-
-									<p>This can be attributed to the dataset used wherein the progression of the disease on the leaves were at its initial stages, so the symptoms are not that developed yet. While the model suffers from relatively low accuracy because of this, the power to predict disease at an earlier stage would give the farmers the opportunity to treat the diseases even before it spreads. This would save them time and energy that they have limited amount of and allow them to focus on the growth of their crops with less worries. That said, seeing how effective the model is on predicting if healthy rice leaves are actually healthy, it can prevent farmers from unnecessarily providing treatment when the plants are actually healthy.</p>
-
-									<h2>Conclusions and Recommendations</h2>
-
-									<p>Three different classifications of rice leaf diseases were studied and compared with the healthy rice leaf using the convolutional neural network. Using more than 3000 images as training data and different image pre-processing techniques, we were able to identify what type of disease a leaf has with 78.2% accuracy. Diving deeper, we can accurately classify a healthy leaf as healthy which would aid the farmers save resources by not treating the already healthy plants.</p>
-									<p>For future studies, we recommend to improve the accuracy of prediction by exploring other network architecture or adding layers or nodes to the current model, scale the project to other diseases for the model to be more general, and, lastly, consult with farmers and consider their input into the pre-processing and deployment of the model.</p>
-
-									<h2>Acknowledgements</h2>
-
-									<p>The authors would like to acknowledge our Machine Learning 2.0 professors, Prof. Christopher Monterola, and Prof. Erika Legara for all their guidance and support for the completion of this project.</p>
+									<h2>Conclusion</h2>
+									<p>Images are a treasure trove of data. However, this also necessitates a computational capability to process this large data. As such, depending on the purposes of classification, it may be sufficient to compare extracted features from the image rather than the pixels, drastically reducing the number of features in the model. Case in point is the Pokemon dataset where if we are only to classify Fire, Water, or Grass, it is sufficient to use color features. This finding extends to other kinds of dataset that has too many features, wherein summary statistics may be enough as features. This leads to better interpretability and faster runtime while only sacrificing a little accuracy.</p>
+									<p>Another finding is different combination of features yields to different accuracies. Increasing the features can only introduce noise, thereby decreasing accuracy. That is, more features does not translate to higher accuracy.</p>
+									<p>Breaking down the accuracies to the different classes can give you an idea whether some features are still needed, or more specifically, whether the features can only predict certain classes.</p>
+									<p>In order to improve the results, the data must be increased through oversampling (SMOTE) or by generating new images through image manipulation techniques. Another recommendation is to use other color spaces aside from RGB like HSV.</p>
 									<ul class="actions">
-										<li><a href="https://github.com/ejmmedina/rice-disease-classification/blob/master/riceimg-clf-ml2.md" class="button">View code in GitHub</a></li>
+										<li><a href="https://github.com/ejmmedina/pokemon-type-prediction/blob/master/pokemon-type-prediction-ml.md" class="button">View code in GitHub</a></li>
 									</ul>
 
 									<p><i>If you have any questions regarding the analysis or wish to have a copy of the report, please contact me via <a href="mailto: elijahjustinmedina@gmail.com">e-mail</a> or <a href="https://www.linkedin.com/in/elijah-justin-medina/">LinkedIn</a></i></p>

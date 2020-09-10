@@ -36,86 +36,72 @@
 							<!-- Content -->
 								<section>
 									<header class="main">
-										<h1 class="generic">The Rice is Right: Early Detection of Rice Leaf Disease using Convolutional Neural Networks</h1>
-										<h5 class="generic">By: Justine Bu&ntilde;o, Elijah Justin Medina, and Raphael Mari Ongleo</h5>
+										<h1 class="generic">Calculator, The Game: A Reinforcement Learning approach</h1>
+										<h5 class="generic">By: Elijah Justin Medina</h5>
 									</header>
 
+									
+									<img src="../images/ml2-indiv-header.PNG" width="80%" class="center" alt="" />
 
-									<span class="image main"><img src="../images/ml2-group-header.PNG" alt="" /></span>
-
-			
 									<h2>Highlights</h2>
 
-									<p>
-										In the Philippines, rice farming industry is very dominant encompassing over 10 million Filipinos. However, these families earn as low as 10 pesos due to the current economy in the industry. Add this to the fact that 37% of their production are lost due to pests and diseases.
-									</p>
-									<p>
-										This study aims to help farmers by early detection of disease through rice leaf image processing using convolutional neural networks. The model is trained on the Rice Disease Image Dataset by Huy Minh Do which includes over 3000 rice leaf images. Over 4 categories: Leaf Blast, Brown Spot, Hispa, and Healthy; the model performs well at 78.2% accuracy. We also looked at how it performs on classifying a healthy rice leaf and found that the model performed even better at 92.2%. Furthermore, we saw that the model is capable even for cases where the symptoms of the disease are still very small. This model gives farmers ample time to potentially save their crops, have better yield, and save cost from fertilizers and pesticides.
-									</p>
+									<div>
+										<ul style="padding-left: 50px; padding-top: -10	px;">
+											<li>Reinforcement Learning can be used to identify the steps to take in order to process an integer to another desired integer.</li>
+											<li>The rules and rewards heavily affect the convergence of the learner and the optimal string of operations to perform on the agent.</li>
+											<li>Given the current methodology (Q-Learning), this project cannot be scaled to Python objects that can take infinite number of states.</li>
+										</ul>
+									</div>
+
+									<h2>Problem Statement</h2>
+
+									<p>Data wrangling is a very tedious process, especially for those with minimal experience on programming. Most of the time, they would have an idea of what the form of their desired output is but at a loss on how to get there from the input data. For example, given an arbitrary Python object like a pandas Dataframe (read from a CSV), they would have to perform a string of operations to reach a desired outcome. If this desired outcome can be manually written, machine learning models can be used to map the input to the output. However, the process and steps to get there will remain a blackbox using traditional machine learning or even deep learning techniques. Our approach to this problem is the use of reinforcement learning wherein the agent is the Python object and the actions it takes are Python methods, changing its state until it becomes similar to the target output.</p>
 									
-									<h2>Data</h2>
-
-									<p>The data used for this project is <a href="https://www.kaggle.com/minhhuy2810/rice-diseases-image-dataset/version/1?fbclid=IwAR3QwbQzFpHLe_KCelIbrrMB4kwaBfhzJhrcqLwX7DEOJmLfkI4ZRF2le4U">Rice Diseases Image Dataset</a> compiled by Huy Minh Do and uploaded in Kaggle. This consists of 3355 images of isolated rice leaves with four classifications: Healthy (1488) or afflicted with one of the diseases: Hispa (565), Brown Spot (523), or Leaf Blast (779). The image sizes range from 734 by 734 pixels to 3120 by 3120 pixels. Sample images of the dataset for each classification is shown below. </p>
-
-									<img src='../images/ml2-sampleimages.png' class="center" width="100%">
-
-									<h2>Data Pre-processing</h2>
-									<p>Before any modeling or classification is performed on the images, several image pre-processing steps must be performed first.</p>
-
-									<h3>Reshape</h3>
-									<p>To account for any limitations that may arise due to camera specifications, all images are reshaped to 300 by 300 pixels, regardless of initial shape. In doing so, the model that will be trained in the succeeding parts will be applicable to even low-quality images.</p>
-
-									<h3>Background removal</h3>
-									<p>After reshaping, the foreground of the image, i.e. the actual leaf, must be separated from the background to reduce noise and data leakage, which would then lead to easier model training. With this, we need to do automated background removal such that an actual photo not taken in an isolated environment can be classified properly by our model.</p>
-
-
-									<p style="margin-bottom: 10px;">
-										These are the steps taken to remove the background per image:
-									</p>
-									<ol style="padding-left: 50px; padding-top: -10	px;">
-										<li>We first perform thresholding according to the RGB values. We want the green pixels and the area around it so we filter by taking out the pixels that have too high red and blue values. We start with 220 threshold (out of 255) and continuously reduce this threshold if the resulting mask image is too big (i.e. not much of the image has been filtered).</li>
-										<li>From the resulting mask, we perform morphological techniques like opening so that the pixels in-between the green leaf pixels will be included into the mask (i.e. the brown spots which will most likely be filtered out will be included using the morphological technique). For this, we use a circular structuring element of radius 13px.</li>
-										<li>We perform erosion to increase the area of the mask in order for the filter to include the immediate surrounding pixels. Then a final closing operation was done to remove the isolated dots.</li>
-										<li>From the blobs formed, we select the largest one and use that as the mask for our actual image.</li>
-									</ol>
+									<p>As an initial study, we start this project with <b>wrangling Python integers to a desired Python integer</b>. From this, we examine the feasibility of the project using Tabular Q-Learning and of further scaling it into other Python objects.</p>
 									
-									<h3>Data Augmentation</h3>
-									<p>To account for different environments upon taking the picture, e.g. rotated images, shifted objects, zoomed in pictures, image augmentation is performed. The augmented images will be transformed versions of the dataset by randomly rotating the image up to 30 ∘ , shifting the image vertically or horizontally up to 15% of the image length, shearing the image up to 20 ∘ , and zooming in the image 0.8x to 1.2x.</p>
+									<h2>Introduction</h2>
+									<p>One direct application of this project is finding the solution to Calculator: The Game, a game wherein there is a given input number, a target output number, and a set of actions that can be done on the number.</p>
 
-									<h2>Modeling</h2>
+									<h2>Methodology</h2>
+									<p>In reinforcement learning, before anything else, the agent, actions, environment, observations, and corresponding rewards must be defined first.</p>
 
-									<p style="margin-bottom: 10px;">
-										For the modeling, we used different pre-trained models and one manually made model to classify the images. Six architectures were used for this project:
+									<h3>Agent</h3>
+									<p>The agent in this problem is the Python integer that is being processed. It can take different states limited to integers ranging from -500 to 500 (the limit was set to minimize the number of states our agent can take)</p>
+
+									<h3>Actions</h3>
+									<p>Hypothetically, the actions that the agent can take are all Python methods but for this project, there are four main actions: addition, subtraction, multiplication, or (integer) division with a number. For each main action, the number to add, subtract, multiply, or divide our agent with can vary. In this project, this number can take values from 1 to 9 for the addition/subtraction and prime numbers from 2 to 5 for the multiplication/division. The probabilities of taking each main actions is equal but the number to use has probabilities weighted by their inverse for the addition/subtraction and frequency for multiplication/division.</p>
+
+									<h3>Observations</h3>
+									<p>The observations of the agent here is constrained to where the agent's state currently is. For some of the rules implemented below, the agent can also observe if the certain action it took makes it nearer or farther to the target.</p>
+
+									<h3>Rewards</h3>
+									<p>The rewards for this learner is based on the following: reaching the goal number, reaching the boundary, getting closer to or farther from the target, or by each iteration. Different points are assigned to each scenario and these are varied as different rules.</p>
+
+									<h3>Q-Learning</h3>
+									<p>
+										The algorithm used for this project is Tabular Q-Learning wherein a table of all possible states (rows) and all possible actions (columns) is created. The values are filled with the discounted future rewards, i.e. how "profitable" is it to take a certain action (column) given your current state (row). The update rules for for this Q-value is:						
 									</p>
-									<ul style="padding-left: 50px; padding-top: -10	px;">
-										<li>VGG16 base for feature extraction and 3-dense layers for classification</li>
-										<li>VGG16 base with only the first 3 blocks frozen and 3-dense layers</li>
-										<li>VGG19 base and 3-dense layers</li>
-										<li>XCeption base and 3-dense layers</li>
-										<li>ResNet base and 3-dense layers</li>
-										<li>5 convolutional layers and 2-dense layers</li>
-									</ul>
+									<img src="../images/ml2-indiv-qlearning.png" class="center" width="75%">
+									<p>In reinforcement learning, the action taken at each step can be one of two things: exploration or exploitation. Exploration is the completely random choice of which action to take while exploitation is taking the best next action based on the Q-Learning table. The chance of choosing exploration over exploitation ($\epsilon$) starts at 100% (pure exploration) and decays by 0.001% every 50 iterations. This is done until the 1M iteration at which point the final Q-Learning table is saved. Whenever it reaches the target output, the value reverts back to the initial value and resumes the iterations.</p>
 
-									<h2>Results</h2>
+									<p>If all states are explored, there will be 999 total possible states or rows (from -499 to 499) and 24 total possible actions or columns (9(add)+ 9(subtract) + 3(multiply) + 3(divide)) for the table.</p>
+									<h2>Summary of Results / Main Learning points</h2>
 
-									<p>Training all the models discussed with the processed images, the accuracy of each model on a validation set is shown in Table 1. Comparing the different models, the model trained from top to bottom yielded the highest accuracy at 78.2%.</p>
+									<h3>Convergence</h3>
+									<p>Across different rule sets, most of the trials failed to converge properly. This is due to the fact that there are too many states that our agent can take and too many actions it can take. The reinforcement learner should be given more time to explore (i.e. more iterations and slower decay in probability of exploration) if this is the case. On the first attempt, the project was constrained to floats rather than integers, but this led to infinite possible states. So it becomes impossible for the learner to properly fill the Q-Learning table.</p>
 
-									<img src="../images/ml2-group-results.PNG" width="35%" class="center" alt="" />
+									<p>The convergence of the learner is heavily dependent on the first few convergences. If the table is filled with the solution of minimal steps, the latter part of the iterations wherein the agent is mostly purely exploiting always converges with said minimal steps. Alternatively, some trials tend to be stuck to a periodic solution (e.g. it performs the same two operations every time), so an agent purely exploiting won't ever converge as it will only change between two values.</p>
 
-									<p>Looking further into the best model and how well it predicts each class, an 85.3% accuracy was found for brown spot, 54.4% for hispa, and 62.0% for leaf blast. On the other hand for healthy rice leaves, it was classified accurately 92.2% of the time. From this, discrepancies on prediction power of the model to different classifications can be observed. Except for brown spots, the model only accurately predicts more than half of rice leaves with disease.</p>
+									<h3>Resulting solution</h3>
+									<p>The rules severely affect the behavior of the resulting solution. For instance, punishing the agent for getting farther from the target number causes the agent to take smaller steps as it is safer. However, this leads to higher number of steps.</p>
 
-									<p>This can be attributed to the dataset used wherein the progression of the disease on the leaves were at its initial stages, so the symptoms are not that developed yet. While the model suffers from relatively low accuracy because of this, the power to predict disease at an earlier stage would give the farmers the opportunity to treat the diseases even before it spreads. This would save them time and energy that they have limited amount of and allow them to focus on the growth of their crops with less worries. That said, seeing how effective the model is on predicting if healthy rice leaves are actually healthy, it can prevent farmers from unnecessarily providing treatment when the plants are actually healthy.</p>
-
-									<h2>Conclusions and Recommendations</h2>
-
-									<p>Three different classifications of rice leaf diseases were studied and compared with the healthy rice leaf using the convolutional neural network. Using more than 3000 images as training data and different image pre-processing techniques, we were able to identify what type of disease a leaf has with 78.2% accuracy. Diving deeper, we can accurately classify a healthy leaf as healthy which would aid the farmers save resources by not treating the already healthy plants.</p>
-									<p>For future studies, we recommend to improve the accuracy of prediction by exploring other network architecture or adding layers or nodes to the current model, scale the project to other diseases for the model to be more general, and, lastly, consult with farmers and consider their input into the pre-processing and deployment of the model.</p>
+									<h3>Limitations and future work</h3>
+									<p>Q-Learning cannot be used for Python object manipulation if the number of states it can take is infinite. Alternative reinforcement learning techniques or rules for rewards should be explored for this problem. As for scaling the project into different Python objects, it is feasible but the number of actions the agents can do must be clearly defined and the number of states is finite.</p>
 
 									<h2>Acknowledgements</h2>
-
-									<p>The authors would like to acknowledge our Machine Learning 2.0 professors, Prof. Christopher Monterola, and Prof. Erika Legara for all their guidance and support for the completion of this project.</p>
+									<p>I would like to acknowledge Prof Chris and Prof Erika for sharing their knowledge to us which contributed immensely to the completion of this project. More importantly, Dr. Bunao for sharing his knowledge on reinforcement learning techniques, from which the codes here are based on. Lastly, my classmates for the exchange of ideas which helped alot for this project.</p>
 									<ul class="actions">
-										<li><a href="https://github.com/ejmmedina/rice-disease-classification/blob/master/riceimg-clf-ml2.md" class="button">View code in GitHub</a></li>
+										<li><a href="https://github.com/ejmmedina/calc-the-game/blob/master/calc-thegame-ml2.md" class="button">View code in GitHub</a></li>
 									</ul>
 
 									<p><i>If you have any questions regarding the analysis or wish to have a copy of the report, please contact me via <a href="mailto: elijahjustinmedina@gmail.com">e-mail</a> or <a href="https://www.linkedin.com/in/elijah-justin-medina/">LinkedIn</a></i></p>
