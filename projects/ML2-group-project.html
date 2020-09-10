@@ -1,0 +1,249 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Elijah Justin Medina | Portfolio</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="icon" href="../images/icon.svg">
+		<link rel="stylesheet" href="../assets/css/main.css" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../index.html" class="logo"><strong>E. Medina</strong> | Home</a>
+									<ul class="icons">
+										<li><a href="https://www.linkedin.com/in/elijah-justin-medina/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://github.com/ejmmedina" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+										<li><a href="mailto: elijahjustinmedina@gmail.com" class="icon solid fa-envelope"><span class="label">E-mail</span></a></li>
+										<!-- <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li> -->
+										<!-- <li><a href="#" class="icon brands fa-medium-m"><span class="label">Medium</span></a></li> -->
+									</ul>
+								</header>
+
+							<!-- Content -->
+								<section>
+									<header class="main">
+										<h1 class="generic">The Rice is Right: Early Detection of Rice Leaf Disease using Convolutional Neural Networks</h1>
+										<h5 class="generic">By: Justine Bu&ntilde;o, Elijah Justin Medina, and Raphael Mari Ongleo</h5>
+									</header>
+
+
+									<span class="image main"><img src="../images/ml2-group-header.PNG" alt="" /></span>
+
+			
+									<h2>Highlights</h2>
+
+									<p>
+										In the Philippines, rice farming industry is very dominant encompassing over 10 million Filipinos. However, these families earn as low as 10 pesos due to the current economy in the industry. Add this to the fact that 37% of their production are lost due to pests and diseases.
+									</p>
+									<p>
+										This study aims to help farmers by early detection of disease through rice leaf image processing using convolutional neural networks. The model is trained on the Rice Disease Image Dataset by Huy Minh Do which includes over 3000 rice leaf images. Over 4 categories: Leaf Blast, Brown Spot, Hispa, and Healthy; the model performs well at 78.2% accuracy. We also looked at how it performs on classifying a healthy rice leaf and found that the model performed even better at 92.2%. Furthermore, we saw that the model is capable even for cases where the symptoms of the disease are still very small. This model gives farmers ample time to potentially save their crops, have better yield, and save cost from fertilizers and pesticides.
+									</p>
+									
+									<h2>Data</h2>
+
+									<p>The data used for this project is <a href="https://www.kaggle.com/minhhuy2810/rice-diseases-image-dataset/version/1?fbclid=IwAR3QwbQzFpHLe_KCelIbrrMB4kwaBfhzJhrcqLwX7DEOJmLfkI4ZRF2le4U">Rice Diseases Image Dataset</a> compiled by Huy Minh Do and uploaded in Kaggle. This consists of 3355 images of isolated rice leaves with four classifications: Healthy (1488) or afflicted with one of the diseases: Hispa (565), Brown Spot (523), or Leaf Blast (779). The image sizes range from 734 by 734 pixels to 3120 by 3120 pixels. Sample images of the dataset for each classification is shown below. </p>
+
+									<img src='../images/ml2-sampleimages.png' class="center" width="100%">
+
+									<h2>Data Pre-processing</h2>
+									<p>Before any modeling or classification is performed on the images, several image pre-processing steps must be performed first.</p>
+
+									<h3>Reshape</h3>
+									<p>To account for any limitations that may arise due to camera specifications, all images are reshaped to 300 by 300 pixels, regardless of initial shape. In doing so, the model that will be trained in the succeeding parts will be applicable to even low-quality images.</p>
+
+									<h3>Background removal</h3>
+									<p>After reshaping, the foreground of the image, i.e. the actual leaf, must be separated from the background to reduce noise and data leakage, which would then lead to easier model training. With this, we need to do automated background removal such that an actual photo not taken in an isolated environment can be classified properly by our model.</p>
+
+
+									<p style="margin-bottom: 10px;">
+										These are the steps taken to remove the background per image:
+									</p>
+									<ol style="padding-left: 50px; padding-top: -10	px;">
+										<li>We first perform thresholding according to the RGB values. We want the green pixels and the area around it so we filter by taking out the pixels that have too high red and blue values. We start with 220 threshold (out of 255) and continuously reduce this threshold if the resulting mask image is too big (i.e. not much of the image has been filtered).</li>
+										<li>From the resulting mask, we perform morphological techniques like opening so that the pixels in-between the green leaf pixels will be included into the mask (i.e. the brown spots which will most likely be filtered out will be included using the morphological technique). For this, we use a circular structuring element of radius 13px.</li>
+										<li>We perform erosion to increase the area of the mask in order for the filter to include the immediate surrounding pixels. Then a final closing operation was done to remove the isolated dots.</li>
+										<li>From the blobs formed, we select the largest one and use that as the mask for our actual image.</li>
+									</ol>
+									
+									<h3>Data Augmentation</h3>
+									<p>To account for different environments upon taking the picture, e.g. rotated images, shifted objects, zoomed in pictures, image augmentation is performed. The augmented images will be transformed versions of the dataset by randomly rotating the image up to 30 ∘ , shifting the image vertically or horizontally up to 15% of the image length, shearing the image up to 20 ∘ , and zooming in the image 0.8x to 1.2x.</p>
+
+									<h2>Modeling</h2>
+
+									<p style="margin-bottom: 10px;">
+										For the modeling, we used different pre-trained models and one manually made model to classify the images. Six architectures were used for this project:
+									</p>
+									<ul style="padding-left: 50px; padding-top: -10	px;">
+										<li>VGG16 base for feature extraction and 3-dense layers for classification</li>
+										<li>VGG16 base with only the first 3 blocks frozen and 3-dense layers</li>
+										<li>VGG19 base and 3-dense layers</li>
+										<li>XCeption base and 3-dense layers</li>
+										<li>ResNet base and 3-dense layers</li>
+										<li>5 convolutional layers and 2-dense layers</li>
+									</ul>
+
+									<h2>Results</h2>
+
+									<p>Training all the models discussed with the processed images, the accuracy of each model on a validation set is shown in Table 1. Comparing the different models, the model trained from top to bottom yielded the highest accuracy at 78.2%.</p>
+
+									<img src="../images/ml2-group-results.PNG" width="35%" class="center" alt="" />
+
+									<p>Looking further into the best model and how well it predicts each class, an 85.3% accuracy was found for brown spot, 54.4% for hispa, and 62.0% for leaf blast. On the other hand for healthy rice leaves, it was classified accurately 92.2% of the time. From this, discrepancies on prediction power of the model to different classifications can be observed. Except for brown spots, the model only accurately predicts more than half of rice leaves with disease.</p>
+
+									<p>This can be attributed to the dataset used wherein the progression of the disease on the leaves were at its initial stages, so the symptoms are not that developed yet. While the model suffers from relatively low accuracy because of this, the power to predict disease at an earlier stage would give the farmers the opportunity to treat the diseases even before it spreads. This would save them time and energy that they have limited amount of and allow them to focus on the growth of their crops with less worries. That said, seeing how effective the model is on predicting if healthy rice leaves are actually healthy, it can prevent farmers from unnecessarily providing treatment when the plants are actually healthy.</p>
+
+									<h2>Conclusions and Recommendations</h2>
+
+									<p>Three different classifications of rice leaf diseases were studied and compared with the healthy rice leaf using the convolutional neural network. Using more than 3000 images as training data and different image pre-processing techniques, we were able to identify what type of disease a leaf has with 78.2% accuracy. Diving deeper, we can accurately classify a healthy leaf as healthy which would aid the farmers save resources by not treating the already healthy plants.</p>
+									<p>For future studies, we recommend to improve the accuracy of prediction by exploring other network architecture or adding layers or nodes to the current model, scale the project to other diseases for the model to be more general, and, lastly, consult with farmers and consider their input into the pre-processing and deployment of the model.</p>
+
+									<h2>Acknowledgements</h2>
+
+									<p>The authors would like to acknowledge our Machine Learning 2.0 professors, Prof. Christopher Monterola, and Prof. Erika Legara for all their guidance and support for the completion of this project.</p>
+									<ul class="actions">
+										<li><a href="https://github.com/ejmmedina/NS-project/blob/master/hcpn-network-NS.md" class="button">View code in GitHub</a></li>
+									</ul>
+
+									<p><i>If you have any questions regarding the analysis or wish to have a copy of the report, please contact me via <a href="mailto: elijahjustinmedina@gmail.com">e-mail</a> or <a href="https://www.linkedin.com/in/elijah-justin-medina/">LinkedIn</a></i></p>
+									<!-- <p>Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fergiat. Pellentesque in mi eu massa lacinia malesuada et a elit. Donec urna ex, lacinia in purus ac, pretium pulvinar mauris. Curabitur sapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit.</p>
+									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus rutrum facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam tristique libero eu nibh porttitor fermentum. Nullam venenatis erat id vehicula viverra. Nunc ultrices eros ut ultricies condimentum. Mauris risus lacus, blandit sit amet venenatis non, bibendum vitae dolor. Nunc lorem mauris, fringilla in aliquam at, euismod in lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In non lorem sit amet elit placerat maximus. Pellentesque aliquam maximus risus, vel sed vehicula.</p>
+									<p>Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fersapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit tristique lorem ipsum dolor.</p>
+
+									<hr class="major" />
+
+									<h2>Interdum sed dapibus</h2>
+									<p>Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fergiat. Pellentesque in mi eu massa lacinia malesuada et a elit. Donec urna ex, lacinia in purus ac, pretium pulvinar mauris. Curabitur sapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit.</p>
+									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus rutrum facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam tristique libero eu nibh porttitor fermentum. Nullam venenatis erat id vehicula viverra. Nunc ultrices eros ut ultricies condimentum. Mauris risus lacus, blandit sit amet venenatis non, bibendum vitae dolor. Nunc lorem mauris, fringilla in aliquam at, euismod in lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In non lorem sit amet elit placerat maximus. Pellentesque aliquam maximus risus, vel sed vehicula. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fersapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit tristique lorem ipsum dolor.</p>
+
+									<hr class="major" />
+
+									<h2>Magna etiam veroeros</h2>
+									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus rutrum facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam tristique libero eu nibh porttitor fermentum. Nullam venenatis erat id vehicula viverra. Nunc ultrices eros ut ultricies condimentum. Mauris risus lacus, blandit sit amet venenatis non, bibendum vitae dolor. Nunc lorem mauris, fringilla in aliquam at, euismod in lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In non lorem sit amet elit placerat maximus. Pellentesque aliquam maximus risus, vel sed vehicula.</p>
+									<p>Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fersapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit tristique lorem ipsum dolor.</p>
+
+									<hr class="major" />
+
+									<h2>Lorem aliquam bibendum</h2>
+									<p>Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fergiat. Pellentesque in mi eu massa lacinia malesuada et a elit. Donec urna ex, lacinia in purus ac, pretium pulvinar mauris. Curabitur sapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit.</p>
+									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus rutrum facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam tristique libero eu nibh porttitor fermentum. Nullam venenatis erat id vehicula viverra. Nunc ultrices eros ut ultricies condimentum. Mauris risus lacus, blandit sit amet venenatis non, bibendum vitae dolor. Nunc lorem mauris, fringilla in aliquam at, euismod in lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In non lorem sit amet elit placerat maximus. Pellentesque aliquam maximus risus, vel sed vehicula.</p> -->
+
+								</section>
+
+						</div>
+					</div>
+
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+
+							<!-- Search -->
+								<section id="search" class="alt">
+									<form method="post" action="#">
+										<input type="text" name="query" id="query" placeholder="Search" />
+									</form>
+								</section>
+
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../index.html">Homepage</a></li>
+										<li>
+											<span class="opener">Network Science</span>
+											<ul>
+												<li><a href="NS-project.html">Network Analysis of the Primary Healthcare Facility Referral System in the Philippines</a></li>
+												<!-- <li><a href="#">Ipsum Adipiscing</a></li>
+												<li><a href="#">Tempus Magna</a></li>
+												<li><a href="#">Feugiat Veroeros</a></li> -->
+											</ul>
+										</li>
+										<!-- <li><a href="#">Etiam Dolore</a></li>
+										<li><a href="#">Adipiscing</a></li>
+										<li>
+											<span class="opener">Another Submenu</span>
+											<ul>
+												<li><a href="#">Lorem Dolor</a></li>
+												<li><a href="#">Ipsum Adipiscing</a></li>
+												<li><a href="#">Tempus Magna</a></li>
+												<li><a href="#">Feugiat Veroeros</a></li>
+											</ul>
+										</li>
+										<li><a href="#">Maximus Erat</a></li>
+										<li><a href="#">Sapien Mauris</a></li>
+										<li><a href="#">Amet Lacinia</a></li> -->
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+									<header class="major">
+										<h2>Featured Projects</h2>
+									</header>
+									<div class="mini-posts">
+										<article>
+											<a href="NS-project.html" class="image"><img src="../images/network.png" alt="" /></a>
+											<p>Network Analysis of the Primary Healthcare Facility Referral System in the Philippines</p>
+										</article>
+										<!-- <article>
+											<a href="#" class="image"><img src="images/pic08.jpg" alt="" /></a>
+											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>
+										</article>
+										<article>
+											<a href="#" class="image"><img src="images/pic09.jpg" alt="" /></a>
+											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>
+										</article> -->
+									</div>
+									<ul class="actions">
+										<li><a href="../index.html#portfolio" class="button">More</a></li>
+									</ul>
+								</section>
+
+							<!-- Section -->
+								<!-- <section>
+									<header class="major">
+										<h2>Get in touch</h2>
+									</header>
+									<p>Sed varius enim lorem ullamcorper dolore aliquam aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin sed aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>
+									<ul class="contact">
+										<li class="icon solid fa-envelope"><a href="#">information@untitled.tld</a></li>
+										<li class="icon solid fa-phone">(000) 000-0000</li>
+										<li class="icon solid fa-home">1234 Somewhere Road #8254<br />
+										Nashville, TN 00000-0000</li>
+									</ul>
+								</section> -->
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">Template: <a href="https://html5up.net">HTML5 UP</a>.</p>
+								</footer>
+
+						</div>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="../assets/js/jquery.min.js"></script>
+			<script src="../assets/js/browser.min.js"></script>
+			<script src="../assets/js/breakpoints.min.js"></script>
+			<script src="../assets/js/util.js"></script>
+			<script src="../assets/js/main.js"></script>
+
+	</body>
+</html>

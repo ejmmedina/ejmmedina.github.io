@@ -1262,7 +1262,12 @@ input[type="radio"] + label:before {
     width: 100%; }
     .image.main img {
       width: 100%; }
-      
+  
+section > img.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 #portfolio .image {
   height: 240px;
 }
